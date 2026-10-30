@@ -16,7 +16,7 @@ from typing import Any
 import pytest
 
 from evals import stubs
-from evals.run import LOWER_IS_BETTER, NOT_COMPUTED, main, run_eval
+from evals.run import LOWER_IS_BETTER, NOT_COMPUTED, main, run_eval, to_markdown
 from evals.schema import (
     MODES,
     AskItem,
@@ -222,6 +222,34 @@ def test_threshold_breach_exits_nonzero(tmp_path: Path) -> None:
     assert cli("search:\n  known_item:\n    recall_at_10: {min: 0.8}\n") == 1
     assert cli("search:\n  known_item:\n    over_abstention_rate: {max: 0.1}\n") == 1
     assert cli("search:\n  no_match:\n    no_match_empty_rate: {min: 0.8}\n") == 0
+
+
+@pytest.mark.req("F15")
+@pytest.mark.parametrize(
+    "bound",
+    [{"minimum": 0.8}, {"mn": 0.8}, 0.8, {}, {"min": "high"}, {"min": 0.8, "typo": 1}],
+)
+def test_malformed_threshold_fails_instead_of_passing(bound: object) -> None:
+    """A typo in thresholds.yaml must not silently switch the gate off."""
+    thresholds = {"search": {"no_match": {"no_match_empty_rate": bound}}}
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
+    assert report.threshold_failures
+
+
+@pytest.mark.req("F15")
+def test_threshold_on_an_unknown_category_fails() -> None:
+    thresholds = {"search": {"known_items": {"recall_at_10": {"min": 0.0}}}}
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
+    assert report.threshold_failures
+
+
+@pytest.mark.req("F15")
+def test_markdown_prints_not_computed_never_zero() -> None:
+    report = run_eval("ask", stubs.abstain_ask, fixture("ask"), thresholds={})
+    consensus = next(line for line in to_markdown(report).splitlines() if "| consensus |" in line)
+    cells = [c.strip() for c in consensus.strip("|").split("|")]
+    # category, n, errors, outcome_accuracy, over_abstention, pmid_recall, citation, unsupported
+    assert cells[6:8] == ["not computed", "not computed"]
 
 
 @pytest.mark.req("F15")

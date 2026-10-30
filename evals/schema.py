@@ -229,7 +229,10 @@ class FoodResult(_Model):
     limiting_amino_acid: str | None = None
     # untruncated, rounded to 2 decimals half up (evals/golden/SOURCES.md)
     amino_acid_score: Decimal | None = None
-    tool_numbers: list[Decimal] = []  # every number the tools produced
+    # Every number the tools produced. The answer may only write numbers from this list, so
+    # a quantity echoed from the query ("200 g of pasta") must be here too: the tool that
+    # took it as input returns it. Do not loosen numbers_subset_rate to let it through.
+    tool_numbers: list[Decimal] = []
 
 
 class RouteResult(_Model):

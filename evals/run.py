@@ -190,6 +190,15 @@ def _aggregate(rows: list[Scores]) -> Scores:
     return out
 
 
+def _valid_bound(bound: Any) -> bool:
+    return (
+        isinstance(bound, dict)
+        and bool(bound)
+        and set(bound) <= {"min", "max"}
+        and all(isinstance(v, int | float) and not isinstance(v, bool) for v in bound.values())
+    )
+
+
 def check_thresholds(
     mode: str, categories: dict[str, CategoryReport], thresholds: dict[str, Any]
 ) -> list[str]:
@@ -197,6 +206,9 @@ def check_thresholds(
     for category, by_metric in (thresholds.get(mode) or {}).items():
         for metric, bound in by_metric.items():
             where = f"{mode}/{category}/{metric}"
+            if not _valid_bound(bound):  # a typo must not switch the gate off
+                failures.append(f"{where}: malformed threshold {bound!r}, want {{min|max: number}}")
+                continue
             row = categories.get(category)
             value = row.metrics.get(metric) if row is not None else None
             if value is None:

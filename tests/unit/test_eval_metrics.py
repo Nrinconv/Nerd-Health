@@ -38,6 +38,17 @@ def test_numbers_in_text_handles_decimals_and_commas() -> None:
     }
 
 
+def test_comma_before_three_digits_is_a_thousands_separator() -> None:
+    """'1,400 mg' must not pass as the tool's 1.4: that would let a 1000x error through."""
+    assert metrics.numbers_in("1,400 mg and 12,345,678 and 1,400.5") == {
+        Decimal("1400"),
+        Decimal("12345678"),
+        Decimal("1400.5"),
+    }
+    assert not metrics.numbers_subset("1,400 mg", [Decimal("1.4")])
+    assert metrics.numbers_subset("1,400 mg", [Decimal("1400")])
+
+
 def test_numbers_subset() -> None:
     tool = [Decimal("2.5"), Decimal("100")]
     assert metrics.numbers_subset("2.5 mg per 100 g", tool)
