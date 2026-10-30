@@ -110,7 +110,7 @@ short expected answers. Then you review the result (checkpoint B).
 
 ## 9. Food: 4 comparisons or rankings
 
-- what has more protien, skyr or greek yogourt? |
+- what has more protien, fromage blanc 0% or greek yogourt? | was "skyr", changed at review: skyr is not in CIQUAL 2020
 - rank these cooked legumes by fiber content: lentils, chickpeas, red kidney beans, split peas |
 - which one has more potasium: a banana, boiled potatoe or dried apricots |
 - rank these cheeses from highest to lowest sodium: comte, feta, roquefort, mozz |
@@ -125,8 +125,8 @@ short expected answers. Then you review the result (checkpoint B).
 
 - how much protien in 100g of myprotein impact whey vanila | branded; expected not in table
 - carbs in a 100g arepa de choclo | Colombian recipe; expected not in table
-- PROPOSE |
-- PROPOSE |
+- selenium in 100g of oatmeal cooked in water | PROPOSE, chosen at review: CIQUAL 9313 Selenium is '-'
+- vitamin k in 100g raw tuna | PROPOSE, chosen at review: CIQUAL 26053 Vitamin K1 is '-'
 - how much creatin is in 100g of raw samon | expected: nutrient has no value in the table
 
 ## 12. Out of bounds: 10

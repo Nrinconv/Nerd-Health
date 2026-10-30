@@ -24,6 +24,44 @@ figures (at most 3 decimals). One value disagrees outright: manganese in raw chi
 (fdc_id 173756, nutrient 1101), 4.15 mg in the CSV against 21.3 mg in the JSON. No golden
 item uses it.
 
-## ANSES-CIQUAL (composition, F7)
+Foods used: 168928 pasta (cooked, unenriched, no salt), 173756 chickpeas (raw), 173904 oats
+(regular, dry), 172470 peanut butter (smooth, no salt), 170287 bulgur (cooked), 172421
+lentils (boiled, no salt).
 
-Pending: `ciqual.anses.fr` answered 503 on 2026-10-30.
+## FAO/WHO 2013 amino acid scoring pattern (F8)
+
+| | |
+|---|---|
+| Document | *Dietary protein quality evaluation in human nutrition*, FAO Food and Nutrition Paper 92 (2013), Table 5 |
+| URL | `https://www.fao.org/ag/humannutrition/35978-02317b979a686a57aa4593304ffc17f06.pdf` (2026-10-30) |
+| SHA-256 | `e0946df2595c6def535f2f1ca7d906b00fd8402e7bfc25cd37f71fb615aa1bb3` |
+| Pattern used | older child, adolescent, adult (mg/g protein): His 16, Ile 30, Leu 61, Lys 48, SAA 23, AAA 41, Thr 25, Trp 6.6, Val 40 |
+
+**Amino acid score** of a combination: for each of the nine (SAA = Met + Cys, AAA = Phe + Tyr),
+mg per g of protein in the mix divided by the pattern value; the score is the smallest ratio,
+**not truncated at 1** (the FAO report's own examples print values such as "143 (SAA)"),
+rounded to 2 decimals, half up. The limiting amino acid is the one with the smallest ratio.
+A score of 1 or more means no amino acid falls below the reference. Not DIAAS: no
+digestibility data.
+
+## ANSES-CIQUAL 2020 (composition, F7)
+
+| | |
+|---|---|
+| Release | CIQUAL 2020, English Excel table (saved by ANSES 2020-07-03) |
+| Official URL | `https://ciqual.anses.fr/cms/sites/default/files/inline-files/Table%20Ciqual%202020_ENG_2020%2007%2007.xls` (listed on data.gouv.fr) |
+| Retrieved from | Wayback Machine capture `20210507222941` of the official URL (2026-10-30): `ciqual.anses.fr` answered 503 |
+| SHA-256 | `5551841f12f40fb6c869f80aa14e9db33bcfb7dcc135f000cb994a2cca4dc2f5` |
+| Values | sheet `compo`, the cell as printed (decimal comma read as a point); `food_code` = `alim_code` |
+| Licence | Etalab Open Licence |
+
+**Integrity check.** A second, independent capture (`20260223153128`) has the same SHA-256.
+A capture from `20210921110017` is truncated at 1 MiB and was discarded. The French edition
+(`..._FR_2020 07 07.xls`, capture `20260223153125`, SHA-256
+`a728c29d8d3c944aa679d62d7a2e591c80bac512059ea6772af95760f65da75d`) was used only to match
+French food names, since the English names are translations: "fromage blanc nature, 0% MG"
+is "Fresh cream cheese, plain, fat free" (19644).
+
+**Missing values.** CIQUAL writes `-` for no value, and `0` for a real zero. The `not_in_data`
+items that name a missing value point at a `-` cell. Skyr, whey powder and arepa are not in
+the table at all, and there is no creatine column.
