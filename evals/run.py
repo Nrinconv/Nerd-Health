@@ -129,7 +129,11 @@ def score_food(item: FoodItem, r: FoodResult | None) -> Scores:
     if item.category == "not_in_data":
         # missing is never 0: not as a value, and not as a number written in the answer
         invented = r is None or not metrics.numbers_subset(r.answer, r.tool_numbers)
-        zero = r is not None and any(v.value == 0 for v in r.values)
+        zero = r is not None and (  # also when a tool itself read the missing cell as 0
+            any(v.value == 0 for v in r.values)
+            or any(n == 0 for n in r.tool_numbers)
+            or 0 in metrics.numbers_in(r.answer)
+        )
         return {
             "not_in_data_rate": _b(
                 r is not None and r.outcome is Outcome.NOT_IN_DATA and not zero and not invented
@@ -208,6 +212,11 @@ def check_thresholds(
     mode: str, categories: dict[str, CategoryReport], thresholds: dict[str, Any]
 ) -> list[str]:
     """Every way a thresholds file can be wrong is a failure: a typo must not open the gate."""
+    if not isinstance(thresholds, dict):
+        return [f"malformed thresholds file {thresholds!r}, want mode -> category -> metric"]
+    unknown = sorted(set(thresholds) - set(MODES))
+    if unknown:
+        return [f"unknown mode(s) in thresholds: {', '.join(map(str, unknown))}"]
     by_category = thresholds.get(mode) or {}
     if not isinstance(by_category, dict):
         return [f"{mode}: malformed thresholds {by_category!r}, want category -> metric -> bound"]
@@ -306,7 +315,9 @@ def to_markdown(report: Report) -> str:
 
 
 def load_target(spec: str) -> Callable[[Query], Any]:
-    module, _, attr = spec.partition(":")
+    module, sep, attr = spec.partition(":")
+    if not sep or not module or not attr:
+        raise ValueError("want module:callable")
     target = getattr(importlib.import_module(module), attr)
     if not callable(target):
         raise TypeError(f"{spec} is not callable")
@@ -324,8 +335,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     target_name = args.target or DEFAULT_TARGETS[args.mode]
     golden = args.golden or GOLDEN_DIR / f"{args.mode}.jsonl"
-    thresholds = yaml.safe_load(args.thresholds.read_text()) or {}
-    report = run_eval(args.mode, load_target(target_name), golden, thresholds, target_name)
+    try:
+        target = load_target(target_name)
+    except (ImportError, AttributeError, TypeError, ValueError) as e:
+        parser.error(f"--target {target_name}: {e}")
+    try:
+        thresholds = yaml.safe_load(args.thresholds.read_text()) or {}
+    except (OSError, yaml.YAMLError) as e:
+        parser.error(f"--thresholds {args.thresholds}: {e}")
+    report = run_eval(args.mode, target, golden, thresholds, target_name)
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{args.mode}.json").write_text(report.model_dump_json(indent=2) + "\n")

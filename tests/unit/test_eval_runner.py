@@ -10,6 +10,7 @@ import json
 import subprocess
 import sys
 from collections.abc import Callable
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -269,6 +270,52 @@ def test_missing_value_written_as_zero_is_not_a_correct_not_in_data() -> None:
 
     row = scores("food", says_zero)["not_in_data"]
     assert row == {"not_in_data_rate": 0.0, "numbers_subset_rate": 0.0}
+
+
+@pytest.mark.req("F15")
+def test_missing_value_turned_into_zero_by_a_tool_still_fails() -> None:
+    """A tool that reads a '-' cell as 0 puts 0 in tool_numbers; that is still missing-as-0."""
+
+    def tool_says_zero(q: Query) -> FoodResult:
+        return FoodResult(
+            outcome=Outcome.NOT_IN_DATA,
+            answer="Vitamin D: 0 ug per 100 g",
+            tool_numbers=[Decimal(0), Decimal(100)],
+        )
+
+    assert scores("food", tool_says_zero)["not_in_data"]["not_in_data_rate"] == 0.0
+
+
+@pytest.mark.req("F15")
+@pytest.mark.parametrize(
+    "thresholds",
+    [
+        {"serach": {"known_item": {"recall_at_10": {"min": 0.8}}}},  # a typo in the mode
+        ["search"],  # not a mapping at all
+    ],
+)
+def test_threshold_file_typo_at_the_top_fails(thresholds: Any) -> None:
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
+    assert report.threshold_failures
+
+
+@pytest.mark.req("F15")
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["--target", "evals.stubs"],  # no ':callable'
+        ["--target", "evals.nope:x"],
+        ["--target", "evals.stubs:nope"],
+        ["--thresholds", "does/not/exist.yaml"],
+    ],
+)
+def test_bad_cli_input_is_a_clean_usage_error(
+    argv: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    with pytest.raises(SystemExit) as exit_:
+        main(["--mode", "search", *argv])
+    assert exit_.value.code == 2  # argparse's usage-error code, not a traceback
+    assert "error:" in capsys.readouterr().err
 
 
 @pytest.mark.req("F15")

@@ -14,8 +14,8 @@ were decided the way they were.
   sources and checksums in `evals/golden/SOURCES.md`; `docs/results.md`.
 - Checkpoint B done: Nicolas reviewed the filled golden sets on 2026-10-30 and approved
   them with no changes. They had been committed before that review, a slip against the plan.
-- Stage-reviewer rounds 1 and 2: CHANGES REQUIRED, all findings fixed (see the stage log
-  when closed). Now: reviewer round 3.
+- Stage-reviewer rounds 1-3: CHANGES REQUIRED, all findings fixed (see the stage log
+  when closed). Now: reviewer round 4.
 
 ## Decisions
 
