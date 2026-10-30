@@ -6,8 +6,7 @@ were decided the way they were.
 
 ## Now
 
-**Stage 0 — Foundations: in review (step 5 of the `/stage` skill).** Everything is implemented and
-`make check` is green. Open before closing: a second reviewer round, then close.
+**Stage 0 — Foundations: done.** Next step: `/stage 1`, step 0 (only when asked).
 
 ## Decisions
 
@@ -20,9 +19,25 @@ were decided the way they were.
 
 ## Shortfalls
 
-None yet.
+- Stage 0: none against the spec. The NF6 evidence (4.0 s) was measured with images cached; a
+  first run that pulls images depends on the network.
 
 ## Stage log
+
+### Stage 0 — Foundations · closed 2026-10-30 · hours not tracked (estimate 3 h)
+- Delivered: `config.py`, `ModelGateway` (OpenAI-compatible, Groq default, bounded 429 back-off,
+  missing cost is `None`), compose stack with Qdrant and Postgres on host ports 6343 and 5442
+  (the default ports were taken by other local projects), `make check` that starts the services
+  and runs gitleaks over the full history, `make check-fast`, coverage gate at 70 % (98.6 %
+  measured), MIT licence, pre-commit, CI with full-history secret scan, branch protection on
+  `main`, Groq prices in `docs/architecture.md`. NF6 split into NF6 and NF12 (Stage 2).
+- Proofs: PR #1 (planted fake key) failed only at the secret scan; PR #2 (failing test) failed
+  at `make test` and showed BLOCKED. Both closed, branches deleted.
+- Cut: nothing. Stretch items (mypy in pre-commit, `.env` docs section) were not done.
+- Reviewer: PASS after 2 rounds. Round 1 found a red secret scan (stale local refs to the
+  deleted throwaway branches, fixed by `git fetch --prune`), the missing model prices, and a
+  stale PROGRESS.md.
+- Not checked: CI on the stage branch itself runs for the first time on the PR.
 
 <!-- One entry per closed stage:
 ### Stage N — <name> · closed YYYY-MM-DD · <hours spent> h (estimate <x> h)
