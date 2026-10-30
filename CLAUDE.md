@@ -80,8 +80,10 @@ These override making the build green.
 
 ```bash
 uv sync                 # install
-make check              # lint, types, tests, regenerate the traceability matrix
-make test               # pytest only
+make check              # the gate: starts services, lint, types, tests, secret scan, traceability
+make check-fast         # lint, types, unit tests only; not the gate
+make up / make down     # Qdrant (6343) and Postgres (5442) via docker compose
+make test               # pytest only (integration tests fail if services are down)
 uv run pytest -m req    # only requirement tests
 ```
 

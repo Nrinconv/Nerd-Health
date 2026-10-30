@@ -11,5 +11,10 @@ Not medical advice, not a coach, not a dietitian.
 
 ```bash
 uv sync
-make check
+cp .env.example .env     # then set GROQ_API_KEY (the file is git-ignored)
+make check               # starts Qdrant and Postgres, then lint, types, tests, secret scan
+make check-fast          # lint, types and unit tests only; not the gate
 ```
+
+Local services use host ports 6343 (Qdrant) and 5442 (Postgres), so they do not clash with
+other projects on the default ports. Licence: MIT.

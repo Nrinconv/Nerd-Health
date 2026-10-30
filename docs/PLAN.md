@@ -132,12 +132,13 @@ or eval passes in CI, not when the code exists.
 | **NF3** | Cost | measured and published per mode; a **hard daily budget** after which the app degrades to search-only mode |
 | **NF4** | Abuse | rate limit per client; no endpoint can run an unbounded LLM loop |
 | **NF5** | Test coverage | ≥ 70 % on the backend package (not the UI) |
-| **NF6** | Local start | `docker compose up` brings the full stack up in < 3 min once data is loaded |
+| **NF6** | Local start | `docker compose up` brings the empty stack (Qdrant, Postgres) to healthy in < 3 min |
 | **NF7** | Reproducibility | ingestion is a script over a committed query list; the data snapshot date is shown in the UI |
 | **NF8** | Injection | retrieved text and user input cannot change the system's policy; tested with planted instructions |
 | **NF9** | Privacy | logs store queries, never raw IPs (hashed for rate limiting only); a short privacy note in the UI |
 | **NF10** | Operation | an external uptime check, a tested rollback, nightly backup of the feedback table |
 | **NF11** | Secrets | none in the repository; CI fails on a detected secret |
+| **NF12** | Local start with data | `docker compose up` brings the full stack up in < 3 min once the corpus is loaded |
 
 ### 3.3 Quality targets (the evals)
 
@@ -314,7 +315,7 @@ and a well-formed report.
 ### Stage 2 — Corpus ingestion · ~6 h
 
 **Goal:** a tagged, reproducible literature corpus.
-**Covers:** F1, F2, NF7.
+**Covers:** F1, F2, NF7, NF12.
 
 - Europe PMC client: cursor pagination, retries with back-off, request pacing.
 - `data/queries.yaml`: topics (hypertrophy, strength, endurance, concurrent training,
@@ -498,7 +499,7 @@ published numbers.
 |---|---|---|
 | 0 | — | 5, 6, 11 |
 | 1 | 15 | — |
-| 2 | 1, 2 | 7 |
+| 2 | 1, 2 | 7, 12 |
 | 3 | 3 | 1 |
 | 4 | 4, 5, 6, 16 | 8 |
 | 5 | 7, 8, 9 | — |

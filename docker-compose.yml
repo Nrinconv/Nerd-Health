@@ -1,0 +1,29 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    ports: ["6343:6333"]  # not 6333: other local projects often hold it
+    volumes: [qdrant_data:/qdrant/storage]
+    healthcheck:
+      # The image has no curl or wget; a bash TCP probe of /readyz is enough.
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/6333 && printf \"GET /readyz HTTP/1.0\\r\\n\\r\\n\" >&3 && grep -q \"200 OK\" <&3'"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  postgres:
+    image: postgres:16.6
+    environment:
+      POSTGRES_USER: nerdhealth
+      POSTGRES_PASSWORD: nerdhealth  # local development only; never reused in deployment
+      POSTGRES_DB: nerdhealth
+    ports: ["5442:5432"]  # not 5432: other local projects often hold it
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nerdhealth -d nerdhealth"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  qdrant_data:
+  postgres_data:
