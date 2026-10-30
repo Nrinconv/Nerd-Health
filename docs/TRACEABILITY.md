@@ -6,7 +6,7 @@
 
 | # | Stage | Status | Verified |
 |---|---|---|---|
-| 0 | Foundations | in_progress | 0/3 |
+| 0 | Foundations | in_progress | 3/3 |
 | 1 | Golden sets and eval harness | planned | 0/1 |
 | 2 | Corpus ingestion | planned | 0/4 |
 | 3 | Study search | planned | 0/2 |
@@ -22,9 +22,9 @@
 
 | ID | Requirement | Verification | Status |
 |---|---|---|---|
-| NF5 | Backend coverage >= 70 %, enforced by the test command. | manual | no evidence |
-| NF6 | docker compose up brings the empty stack (Qdrant, Postgres) to healthy in < 3 min. | manual | no evidence |
-| NF11 | No secrets in the repository; CI fails on a detected secret. | manual | no evidence |
+| NF5 | Backend coverage >= 70 %, enforced by the test command. | manual: pyproject addopts has --cov=nerdhealth --cov-fail-under=70, run by every `make test` (local and CI); 98.6% on 2026-10-30; test_coverage_gate.py guards the setting. | verified |
+| NF6 | docker compose up brings the empty stack (Qdrant, Postgres) to healthy in < 3 min. | manual: 2026-10-30, empty volumes, images cached: `docker compose up -d --wait` returned in 4.0 s with qdrant and postgres healthy (limit 3 min). A first run that must pull images is slower and depends on the network. | verified |
+| NF11 | No secrets in the repository; CI fails on a detected secret. | manual: gitleaks v8.21.2 in `make check` and ci.yml (fetch-depth 0). PR #1 (closed) planted a fake key: lint, types, tests passed and only `make secrets` failed - https://github.com/Nrinconv/Nerd-Health/actions/runs/41079105620 | verified |
 
 ## Stage 1 — Golden sets and eval harness
 

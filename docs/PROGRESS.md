@@ -6,20 +6,10 @@ were decided the way they were.
 
 ## Now
 
-**Stage 0 — Foundations: not started.** Next step: `/stage 0`, step 0.
-
-Already in place before Stage 0 (the scaffolding, 2026-10-30):
-
-- `uv` project, Ruff, mypy strict, pytest, `Makefile`, `ci.yml` running `make check`.
-- `requirements.yaml`, the `@pytest.mark.req` plugin in `tests/conftest.py`,
-  `scripts/traceability.py` and its tests.
-- `CLAUDE.md`, the `/stage` skill, the `stage-reviewer` agent, the hook that blocks edits to
-  `docs/TRACEABILITY.md`.
-
-Still to do in Stage 0, from `docs/PLAN.md`: GitHub repo and branch protection, MIT licence,
-pre-commit, coverage gate (NF5), `docker-compose.yml` with Qdrant and Postgres (NF6),
-`config.py`, `ModelGateway` and the model choice with its price, secret scanning in CI (NF11),
-the smoke test.
+**Stage 0 — Foundations: in review (step 5 of the `/stage` skill).** Everything is implemented and
+`make check` is green. Open before closing: the Groq price per million tokens for
+`openai/gpt-oss-20b` and `openai/gpt-oss-120b` in `docs/architecture.md` (the reviewer's finding 2;
+the price comes from Nicolas's Groq console), then a second reviewer round, then close.
 
 ## Decisions
 
