@@ -1,0 +1,121 @@
+# The requirements of NerdHealth, and the stage that delivers each one.
+#
+# The full text and the reasoning live in docs/PLAN.md §3. This file is what
+# scripts/trace.py reads to build docs/TRACEABILITY.md.
+#
+# stage status:  planned | in_progress | done
+#   A stage may be marked done only when every requirement it delivers is verified,
+#   and only after every earlier stage is done. trace.py enforces both.
+#
+# verification:  test (default) | manual
+#   test    verified by pytest tests marked @pytest.mark.req("<ID>"); at least one
+#           must pass and none may fail, skip or xfail.
+#   manual  verified by something pytest cannot run (a CI gate, a timed start-up, a
+#           rollback drill). `evidence` must say where to look before the stage closes.
+
+stages:
+  - {id: 0, name: Foundations, status: planned}
+  - {id: 1, name: Golden sets and eval harness, status: planned}
+  - {id: 2, name: Corpus ingestion, status: planned}
+  - {id: 3, name: Study search, status: planned}
+  - {id: 4, name: Question mode, status: planned}
+  - {id: 5, name: Food mode, status: planned}
+  - {id: 6, name: Router and API, status: planned}
+  - {id: 7, name: Frontend, status: planned}
+  - {id: 8, name: Deployment and operations, status: planned}
+  - {id: 9, name: Plan mode, status: planned}
+  - {id: 10, name: Write-up, status: planned}
+
+requirements:
+  # Functional
+  - id: F1
+    stage: 2
+    text: Ingest the Europe PMC corpus from a versioned query list, with full metadata; idempotent and reproducible.
+  - id: F2
+    stage: 2
+    text: Tag every paper with study type and population (sex, age band, training status, sample size); unknown allowed.
+  - id: F3
+    stage: 3
+    text: "Study search: BM25 + dense with RRF, cross-encoder rerank, filters on year, type and population; no LLM call."
+  - id: F4
+    stage: 4
+    text: "Question: every sentence cites a PMID, every claim carries an evidence label, disagreement stated explicitly."
+  - id: F5
+    stage: 4
+    text: "Abstention in every mode: say so and show what was searched; answer the supported part; missing values are never 0; out-of-bounds gets a fixed redirect."
+  - id: F6
+    stage: 4
+    text: Flag a population mismatch between the user's stated population and the cited studies.
+  - id: F7
+    stage: 5
+    text: "Food lookup, compare and rank from CIQUAL; every value shows its source and food code."
+  - id: F8
+    stage: 5
+    text: Protein combination from USDA SR Legacy, amino acid score against FAO/WHO 2013, limiting amino acid; not DIAAS.
+  - id: F9
+    stage: 5
+    text: Mixed questions use food tools and literature in one answer.
+  - id: F10
+    stage: 6
+    text: "Router: search / question / food / plan / out-of-bounds, with a user override."
+  - id: F11
+    stage: 6
+    text: "API: /search, /ask (SSE), /food, /plan (SSE), /feedback, /health, /metrics, OpenAPI docs."
+  - id: F12
+    stage: 7
+    text: "Frontend: mode selector, clickable citations, evidence badges, permanent disclaimer, feedback control."
+  - id: F13
+    stage: 6
+    text: Store feedback with the query, answer, retrieved IDs, model, cost and latency.
+  - id: F14
+    stage: 9
+    text: "Plan: illustrative weekly structure; every parameter cited or explicitly marked no_evidence."
+  - id: F15
+    stage: 1
+    text: "Eval CLI: python -m evals.run --mode <mode> writes a per-category report."
+  - id: F16
+    stage: 4
+    text: "Typed outcome on every response: ANSWERED, PARTIAL, INSUFFICIENT_EVIDENCE, NOT_IN_DATA, OUT_OF_BOUNDS."
+
+  # Non-functional
+  - id: NF1
+    stage: 3
+    text: Study search p95 < 1.5 s.
+  - id: NF2
+    stage: 6
+    text: Question first token p50 < 3 s, full answer p95 < 20 s.
+  - id: NF3
+    stage: 6
+    text: Cost measured per mode; hard daily budget that degrades to search-only.
+  - id: NF4
+    stage: 6
+    text: Rate limit per client; no unbounded LLM loop.
+  - id: NF5
+    stage: 0
+    verification: manual
+    evidence: ""
+    text: Backend coverage >= 70 %, enforced by the test command.
+  - id: NF6
+    stage: 0
+    verification: manual
+    evidence: ""
+    text: docker compose up brings the stack up in < 3 min once data is loaded.
+  - id: NF7
+    stage: 2
+    text: Ingestion is a script over a committed query list; the snapshot date is shown in the UI.
+  - id: NF8
+    stage: 4
+    text: Retrieved text and user input cannot change the policy; tested with planted instructions.
+  - id: NF9
+    stage: 6
+    text: Logs never store raw IPs; privacy note in the UI.
+  - id: NF10
+    stage: 8
+    verification: manual
+    evidence: ""
+    text: External uptime check, a tested rollback, nightly feedback backup.
+  - id: NF11
+    stage: 0
+    verification: manual
+    evidence: ""
+    text: No secrets in the repository; CI fails on a detected secret.

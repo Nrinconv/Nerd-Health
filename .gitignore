@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.coverage
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+reports/
+dist/
+node_modules/
+web/dist/
+data/raw/
+.claude/settings.local.json
