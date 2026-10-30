@@ -2,31 +2,46 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Sequence
 from decimal import Decimal
 
 from evals.schema import Outcome
 
+ABSTENTIONS = frozenset({Outcome.INSUFFICIENT_EVIDENCE, Outcome.NOT_IN_DATA, Outcome.OUT_OF_BOUNDS})
+_NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
+
 
 def recall_at_k(expected: Sequence[str], ranked: Sequence[str], k: int = 10) -> float:
-    raise NotImplementedError
+    """Share of the expected PMIDs found in the first k results."""
+    top = set(ranked[:k])
+    return sum(p in top for p in expected) / len(expected)
 
 
 def reciprocal_rank(expected: Sequence[str], ranked: Sequence[str]) -> float:
-    raise NotImplementedError
+    """1 / rank of the first expected PMID; 0 if none is returned."""
+    wanted = set(expected)
+    for rank, pmid in enumerate(ranked, start=1):
+        if pmid in wanted:
+            return 1 / rank
+    return 0.0
 
 
 def is_abstention(outcome: Outcome) -> bool:
-    raise NotImplementedError
+    """PARTIAL answers the supported part, so it is not an abstention."""
+    return outcome in ABSTENTIONS
 
 
 def numbers_in(text: str) -> set[Decimal]:
-    raise NotImplementedError
+    """Every number written in the text, normalised (2,50 and 2.5 are the same number)."""
+    return {Decimal(m.replace(",", ".")).normalize() for m in _NUMBER.findall(text)}
 
 
 def numbers_subset(text: str, tool_numbers: Iterable[Decimal]) -> bool:
-    raise NotImplementedError
+    """True when every number in the text was produced by a tool."""
+    return numbers_in(text) <= {n.normalize() for n in tool_numbers}
 
 
 def mean(values: Sequence[float]) -> float | None:
-    raise NotImplementedError
+    """None when there is nothing to average: no data is not a score of 0."""
+    return sum(values) / len(values) if values else None

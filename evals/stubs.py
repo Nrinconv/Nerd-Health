@@ -1,21 +1,24 @@
-"""Stand-in systems. They do nothing useful, so their scores are the floor."""
+"""Stand-in systems. They do nothing useful, so their scores are the floor.
+
+Until a stage delivers the real mode, `python -m evals.run` targets these by default.
+"""
 
 from __future__ import annotations
 
-from evals.schema import AskResult, FoodResult, Query, RouteResult, SearchResult
+from evals.schema import AskResult, FoodResult, Outcome, Query, RouteResult, SearchResult
 
 
 def empty_search(q: Query) -> SearchResult:
-    raise NotImplementedError
+    return SearchResult(outcome=Outcome.INSUFFICIENT_EVIDENCE)
 
 
 def abstain_ask(q: Query) -> AskResult:
-    raise NotImplementedError
+    return AskResult(outcome=Outcome.INSUFFICIENT_EVIDENCE)
 
 
 def abstain_food(q: Query) -> FoodResult:
-    raise NotImplementedError
+    return FoodResult(outcome=Outcome.NOT_IN_DATA)
 
 
 def constant_router(q: Query) -> RouteResult:
-    raise NotImplementedError
+    return RouteResult(mode="question")
