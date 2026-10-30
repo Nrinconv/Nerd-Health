@@ -6,7 +6,7 @@
 
 | # | Stage | Status | Verified |
 |---|---|---|---|
-| 0 | Foundations | planned | 0/3 |
+| 0 | Foundations | in_progress | 0/3 |
 | 1 | Golden sets and eval harness | planned | 0/1 |
 | 2 | Corpus ingestion | planned | 0/3 |
 | 3 | Study search | planned | 0/2 |
