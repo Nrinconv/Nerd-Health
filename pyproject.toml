@@ -18,7 +18,6 @@ dev = [
     "pytest>=8.3",
     "pytest-cov>=5.0",
     "pyyaml>=6.0",
-    "respx>=0.23.1",
     "ruff>=0.6",
     "types-pyyaml>=6.0",
 ]
@@ -33,7 +32,7 @@ packages = ["src/nerdhealth"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "scripts"]
-addopts = "-ra --strict-markers"
+addopts = "-ra --strict-markers --cov=nerdhealth --cov-fail-under=70"
 
 [tool.ruff]
 line-length = 100
@@ -45,4 +44,5 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
+plugins = ["pydantic.mypy"]
 mypy_path = ["src", "scripts"]
