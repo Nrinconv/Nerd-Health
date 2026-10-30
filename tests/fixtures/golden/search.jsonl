@@ -1,0 +1,3 @@
+{"id": "s1", "category": "known_item", "query": "weekly volume and hypertrophy meta-analysis", "expected_pmids": ["10000001"]}
+{"id": "s2", "category": "known_item", "query": "concurrent training in trained women", "filters": {"year_min": 2018}, "expected_pmids": ["10000002", "10000003"]}
+{"id": "s3", "category": "no_match", "query": "effect of moon phases on bench press", "expected_pmids": []}
