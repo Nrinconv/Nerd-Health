@@ -6,16 +6,16 @@ were decided the way they were.
 
 ## Now
 
-**Stage 1 — Golden sets and eval harness: in progress**, branch `stage/1-golden-sets`.
-`/stage` step 4 (implement). The plan was approved on 2026-10-30.
+**Stage 1 — Golden sets and eval harness: done**, branch `stage/1-golden-sets`, PR pending.
+Next step: `/stage 2`, step 0 (only when asked).
 
-- Done: tests (seen failing for missing behaviour), `evals/` schema, metrics, stubs and
-  runner; all five golden sets filled from Nicolas's questions (`evals/golden/questions.md`);
-  sources and checksums in `evals/golden/SOURCES.md`; `docs/results.md`.
-- Checkpoint B done: Nicolas reviewed the filled golden sets on 2026-10-30 and approved
-  them with no changes. They had been committed before that review, a slip against the plan.
-- Stage-reviewer rounds 1-3: CHANGES REQUIRED, all findings fixed (see the stage log
-  when closed). Now: reviewer round 4.
+Carried forward from the Stage 1 review (non-blocking):
+- Stage 5: `metrics.numbers_in` reads digits inside names ("vitamin B12", "omega-3") as
+  numbers, so an honest food answer can fail `numbers_subset_rate`. Stricter, never looser;
+  decide then whether to skip digits attached to letters or have the tools echo them, with a test.
+- Stage 3: a no-match search scores "empty" from `pmids` alone; consider also requiring an
+  abstention outcome.
+- Stage 6: report router accuracy for ambiguous vs clear queries, not only per label.
 
 ## Decisions
 
@@ -34,6 +34,11 @@ were decided the way they were.
 
 - Stage 0: none against the spec. The NF6 evidence (4.0 s) was measured with images cached; a
   first run that pulls images depends on the network.
+- Stage 1: none against the spec. Three things are only as good as a later check: the food
+  values were read from archived copies of CIQUAL and SR Legacy (re-verified against the
+  ingested tables in Stage 5); the 53 PMIDs exist on Europe PMC but are only known to be in
+  the corpus after Stage 2's test; the short expected answers follow Nicolas's notes and the
+  paper titles, not a full reading of every abstract.
 
 ## Stage log
 
@@ -51,6 +56,29 @@ were decided the way they were.
   deleted throwaway branches, fixed by `git fetch --prune`), the missing model prices, and a
   stale PROGRESS.md.
 - Not checked: CI on the stage branch itself runs for the first time on the PR.
+
+### Stage 1 — Golden sets and eval harness · closed 2026-10-30 · hours not tracked (estimate 5 h)
+- Delivered: `evals/` package (schema, metrics, stubs, runner); `python -m evals.run --mode
+  <search|ask|food|oob|router> [--target module:callable]` writing a per-category report
+  (JSON + Markdown) and exiting 1 below threshold; five golden sets, 117 items, questions
+  written by Nicolas, PMIDs (53) verified on Europe PMC, food values read from CIQUAL 2020
+  and SR Legacy with checksums (`evals/golden/SOURCES.md`); empty `thresholds.yaml`;
+  `docs/results.md` with the stub floors. PLAN §7 Stage 1 "Tests" line reworded (approved).
+- Rules the harness enforces: judge metrics print "not computed", never 0; a crash or a wrong
+  return type fails every metric and never scores as an abstention; a refusal earns no
+  population-flag credit; missing-as-0 fails at the value, tool and answer-text level; any
+  malformed or wrong-way threshold fails the gate.
+- Review fixes to the golden content, by Nicolas: the meal-plan router query relabelled
+  out_of_bounds; skyr (not in CIQUAL) became fromage blanc 0%; raw/cooked weights stated.
+- Cut: one stretch item, short expected answers for the 8 unanswerable ask items (they carry
+  only the expected outcome, which is all the metrics read). The other two stretch items
+  (markdown report, threshold gate) were done.
+- Reviewer: PASS after 4 rounds. Rounds 1-3 found holes in the gate and the number guards:
+  a malformed threshold passing silently, "1,400" read as 1.4, a missing value written as 0
+  in the answer (then 0 produced by a tool) scoring as correct NOT_IN_DATA, mode-key typos,
+  wrong-way bounds, the PLAN wording. All fixed test-first.
+- Slip: the golden sets were committed before Nicolas reviewed them (checkpoint B); he then
+  approved them unchanged.
 
 <!-- One entry per closed stage:
 ### Stage N — <name> · closed YYYY-MM-DD · <hours spent> h (estimate <x> h)
