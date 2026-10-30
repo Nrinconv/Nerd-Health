@@ -1,0 +1,6 @@
+# What CI enforces on the evals: mode -> category -> metric -> {min: x} or {max: x}.
+#
+# Starts empty. Each threshold starts at what the first honest run achieved and only ever
+# moves up (CLAUDE.md). A shortfall against a PLAN §3.3 target goes into docs/results.md
+# with its reason; it is never fixed by lowering a number here.
+{}
