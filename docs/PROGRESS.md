@@ -10,14 +10,19 @@ were decided the way they were.
 `/stage` step 4 (implement). The plan was approved on 2026-10-30.
 
 - Done: tests (seen failing for missing behaviour), `evals/` schema, metrics, stubs and
-  runner. All harness tests pass.
-- Waiting on **checkpoint A**: Nicolas writes the questions for the five golden sets.
-  Claude then fills PMIDs (Europe PMC lookups) and expected values, and Nicolas reviews
-  (checkpoint B). Until then the 11 golden-content tests fail on empty `evals/golden/*.jsonl`.
-- Food sources: USDA SR Legacy downloaded and cross-checked (`evals/golden/SOURCES.md`).
-  CIQUAL is still to fetch: `ciqual.anses.fr` answered 503, and the Wayback Machine
-  rate-limited the lookup.
-- After the content: `make check`, stage-reviewer, close.
+  runner; all five golden sets filled from Nicolas's questions (`evals/golden/questions.md`);
+  sources and checksums in `evals/golden/SOURCES.md`; `docs/results.md`.
+- Waiting on **checkpoint B**: Nicolas reviews the filled golden sets. The sets were
+  committed before that review (a slip against the plan); changes from it go in as a
+  follow-up commit.
+- Then: stage-reviewer (step 5), close (step 6).
+
+Open spec proposals raised in the Stage 1 plan, not yet decided, PLAN unchanged:
+1. Stage 2 "done when" should include: every PMID in `search.jsonl` and `ask.jsonl` is in
+   the corpus, and the mini-corpus fixture contains them.
+2. Stage 1 "the runner against a stub returns zeros" should read "returns the expected
+   floor for each stub": abstention metrics score 1.0 for a stub that refuses everything.
+3. `plan.jsonl` (in §5's layout) is written in Stage 9, not Stage 1.
 
 ## Decisions
 

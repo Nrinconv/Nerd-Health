@@ -7,7 +7,7 @@
 | # | Stage | Status | Verified |
 |---|---|---|---|
 | 0 | Foundations | done | 3/3 |
-| 1 | Golden sets and eval harness | planned | 0/1 |
+| 1 | Golden sets and eval harness | in_progress | 1/1 |
 | 2 | Corpus ingestion | planned | 0/4 |
 | 3 | Study search | planned | 0/2 |
 | 4 | Question mode | planned | 0/5 |
@@ -30,7 +30,29 @@
 
 | ID | Requirement | Verification | Status |
 |---|---|---|---|
-| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 0/0 tests passing | no test |
+| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 17/17 tests passing | verified |
+
+<details><summary>Tests</summary>
+
+- `F15` `tests/unit/test_eval_runner.py::test_a_crash_is_an_error_never_an_abstention` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_abstaining_never_earns_population_flag_credit` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_cli_search_runs_end_to_end_against_stub` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[ask]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[food]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[oob]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[router]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[search]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[ask]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[food]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[oob]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[router]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[search]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_stub_scores_are_exact` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_breach_exits_nonzero` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_on_a_metric_not_computed_fails` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_wrong_result_type_is_an_error` — passed
+
+</details>
 
 ## Stage 2 — Corpus ingestion
 
