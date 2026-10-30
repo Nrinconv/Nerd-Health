@@ -227,6 +227,7 @@ class FoodResult(_Model):
     values: list[FoodValue] = []
     ranking: list[str] = []
     limiting_amino_acid: str | None = None
+    # untruncated, rounded to 2 decimals half up (evals/golden/SOURCES.md)
     amino_acid_score: Decimal | None = None
     tool_numbers: list[Decimal] = []  # every number the tools produced
 

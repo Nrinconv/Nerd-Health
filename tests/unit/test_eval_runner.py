@@ -193,6 +193,17 @@ def test_a_crash_is_an_error_never_an_abstention() -> None:
 
 
 @pytest.mark.req("F15")
+def test_abstaining_never_earns_population_flag_credit(tmp_path: Path) -> None:
+    """Not flagging a mismatch is only correct in an answer; a refusal flags nothing."""
+    golden = tmp_path / "ask.jsonl"
+    item = load_golden("ask", fixture("ask"))[2]  # the population item
+    assert isinstance(item, AskItem)
+    golden.write_text(item.model_copy(update={"population_mismatch": False}).model_dump_json())
+    report = run_eval("ask", stubs.abstain_ask, golden, thresholds={})
+    assert report.categories["population"].metrics["population_flag_accuracy"] == 0.0
+
+
+@pytest.mark.req("F15")
 def test_wrong_result_type_is_an_error() -> None:
     report = run_eval("search", lambda q: ["10000001"], fixture("search"), thresholds={})
     assert report.categories["known_item"].errors == 2

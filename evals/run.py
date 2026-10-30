@@ -116,10 +116,11 @@ def score_ask(item: AskItem, r: AskResult | None) -> Scores:
         "citation_precision": NOT_COMPUTED,
         "unsupported_claim_rate": NOT_COMPUTED,
     }
-    if item.category == "population":
-        flagged = r is not None and r.population_mismatch_flagged
+    if item.category == "population":  # credit only in an answer: a refusal flags nothing
         scores["population_flag_accuracy"] = _b(
-            r is not None and flagged == item.population_mismatch
+            r is not None
+            and not metrics.is_abstention(r.outcome)
+            and r.population_mismatch_flagged == item.population_mismatch
         )
     return scores
 
