@@ -30,13 +30,20 @@
 
 | ID | Requirement | Verification | Status |
 |---|---|---|---|
-| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 17/17 tests passing | verified |
+| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 25/25 tests passing | verified |
 
 <details><summary>Tests</summary>
 
 - `F15` `tests/unit/test_eval_runner.py::test_a_crash_is_an_error_never_an_abstention` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_abstaining_never_earns_population_flag_credit` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_cli_search_runs_end_to_end_against_stub` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[0.8]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound3]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound4]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound5]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_markdown_prints_not_computed_never_zero` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[ask]` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[food]` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[oob]` — passed
@@ -50,6 +57,7 @@
 - `F15` `tests/unit/test_eval_runner.py::test_stub_scores_are_exact` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_threshold_breach_exits_nonzero` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_threshold_on_a_metric_not_computed_fails` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_on_an_unknown_category_fails` — passed
 - `F15` `tests/unit/test_eval_runner.py::test_wrong_result_type_is_an_error` — passed
 
 </details>
