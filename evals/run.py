@@ -127,9 +127,14 @@ def score_ask(item: AskItem, r: AskResult | None) -> Scores:
 
 def score_food(item: FoodItem, r: FoodResult | None) -> Scores:
     if item.category == "not_in_data":
+        # missing is never 0: not as a value, and not as a number written in the answer
+        invented = r is None or not metrics.numbers_subset(r.answer, r.tool_numbers)
         zero = r is not None and any(v.value == 0 for v in r.values)
         return {
-            "not_in_data_rate": _b(r is not None and r.outcome is Outcome.NOT_IN_DATA and not zero)
+            "not_in_data_rate": _b(
+                r is not None and r.outcome is Outcome.NOT_IN_DATA and not zero and not invented
+            ),
+            "numbers_subset_rate": _b(not invented),
         }
     returned = (
         {(v.source, v.food_code, v.nutrient): v.value for v in r.values} if r is not None else {}
@@ -202,12 +207,23 @@ def _valid_bound(bound: Any) -> bool:
 def check_thresholds(
     mode: str, categories: dict[str, CategoryReport], thresholds: dict[str, Any]
 ) -> list[str]:
+    """Every way a thresholds file can be wrong is a failure: a typo must not open the gate."""
+    by_category = thresholds.get(mode) or {}
+    if not isinstance(by_category, dict):
+        return [f"{mode}: malformed thresholds {by_category!r}, want category -> metric -> bound"]
     failures: list[str] = []
-    for category, by_metric in (thresholds.get(mode) or {}).items():
+    for category, by_metric in by_category.items():
+        if not isinstance(by_metric, dict):
+            failures.append(f"{mode}/{category}: malformed thresholds {by_metric!r}")
+            continue
         for metric, bound in by_metric.items():
             where = f"{mode}/{category}/{metric}"
-            if not _valid_bound(bound):  # a typo must not switch the gate off
+            if not _valid_bound(bound):
                 failures.append(f"{where}: malformed threshold {bound!r}, want {{min|max: number}}")
+                continue
+            wrong = "min" if metric in LOWER_IS_BETTER else "max"
+            if wrong in bound:
+                failures.append(f"{where}: {wrong} points the wrong way for this metric")
                 continue
             row = categories.get(category)
             value = row.metrics.get(metric) if row is not None else None
@@ -218,6 +234,12 @@ def check_thresholds(
             elif "max" in bound and value > bound["max"]:
                 failures.append(f"{where} = {value:.3f} > max {bound['max']}")
     return failures
+
+
+def _display_path(path: Path) -> str:
+    """Relative to the repository when inside it, so reports carry no local home path."""
+    resolved = path.resolve()
+    return str(resolved.relative_to(ROOT)) if resolved.is_relative_to(ROOT) else str(path)
 
 
 def run_eval(
@@ -250,7 +272,7 @@ def run_eval(
     }
     return Report(
         mode=mode,
-        golden=str(golden),
+        golden=_display_path(golden),
         target=target_name or getattr(target, "__name__", repr(target)),
         run_at=datetime.now(UTC).isoformat(timespec="seconds"),
         categories=categories,

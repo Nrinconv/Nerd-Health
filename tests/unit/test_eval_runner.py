@@ -112,7 +112,7 @@ def test_stub_scores_are_exact() -> None:
         "numeric_exact_rate": 0.0,
         "numbers_subset_rate": 1.0,  # says nothing, so invents no number
     }
-    assert food["not_in_data"] == {"not_in_data_rate": 1.0}
+    assert food["not_in_data"] == {"not_in_data_rate": 1.0, "numbers_subset_rate": 1.0}
 
     # INSUFFICIENT_EVIDENCE is not a redirect: an out-of-bounds topic needs OUT_OF_BOUNDS.
     assert scores("oob", stubs.abstain_ask) == {
@@ -234,6 +234,47 @@ def test_malformed_threshold_fails_instead_of_passing(bound: object) -> None:
     thresholds = {"search": {"no_match": {"no_match_empty_rate": bound}}}
     report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
     assert report.threshold_failures
+
+
+@pytest.mark.req("F15")
+@pytest.mark.parametrize(
+    ("metric", "bound"),
+    [
+        ("over_abstention_rate", {"min": 0.0}),  # lower is better: only max makes sense
+        ("recall_at_10", {"max": 1.0}),  # higher is better: only min makes sense
+    ],
+)
+def test_threshold_pointing_the_wrong_way_fails(metric: str, bound: dict[str, float]) -> None:
+    thresholds = {"search": {"known_item": {metric: bound}}}
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
+    assert any("wrong way" in f for f in report.threshold_failures), report.threshold_failures
+
+
+@pytest.mark.req("F15")
+@pytest.mark.parametrize(
+    "thresholds",
+    [{"search": ["known_item"]}, {"search": {"known_item": 0.8}}, {"search": 1}],
+)
+def test_malformed_threshold_shape_is_reported(thresholds: dict[str, Any]) -> None:
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds=thresholds)
+    assert any("malformed" in f for f in report.threshold_failures)
+
+
+@pytest.mark.req("F15")
+def test_missing_value_written_as_zero_is_not_a_correct_not_in_data() -> None:
+    """NOT_IN_DATA with a 0 (or any invented number) in the text fails: missing is never 0."""
+
+    def says_zero(q: Query) -> FoodResult:
+        return FoodResult(outcome=Outcome.NOT_IN_DATA, answer="Vitamin D: 0 ug per 100 g")
+
+    row = scores("food", says_zero)["not_in_data"]
+    assert row == {"not_in_data_rate": 0.0, "numbers_subset_rate": 0.0}
+
+
+@pytest.mark.req("F15")
+def test_report_records_the_golden_path_relative_to_the_repo() -> None:
+    report = run_eval("search", stubs.empty_search, fixture("search"), thresholds={})
+    assert report.golden == "tests/fixtures/golden/search.jsonl"
 
 
 @pytest.mark.req("F15")

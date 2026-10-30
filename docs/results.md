@@ -13,7 +13,7 @@ do-nothing stub (`evals/stubs.py`), so these numbers are the **floor**, not resu
 |---|---|---|
 | search | returns nothing | recall@10 0, MRR 0, over-abstention 1.00, but no-match-empty 1.00 |
 | ask | always `INSUFFICIENT_EVIDENCE` | fabrication 0 and correct abstention 1.00 on unanswerable items, over-abstention 1.00 on everything else |
-| food | always `NOT_IN_DATA` | `NOT_IN_DATA` rate 1.00, numeric exactness 0, over-abstention 1.00 |
+| food | always `NOT_IN_DATA` | `NOT_IN_DATA` rate 1.00, numeric exactness 0, over-abstention 1.00, numbers-in-answer ⊆ tool numbers 1.00 (it writes no number at all) |
 | oob | always `INSUFFICIENT_EVIDENCE` | redirect rate 0 (a redirect needs `OUT_OF_BOUNDS`) |
 | router | always `question` | accuracy 1.00 on `question`, 0 elsewhere |
 
