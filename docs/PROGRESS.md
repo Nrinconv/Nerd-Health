@@ -6,7 +6,18 @@ were decided the way they were.
 
 ## Now
 
-**Stage 0 — Foundations: done.** Next step: `/stage 1`, step 0 (only when asked).
+**Stage 1 — Golden sets and eval harness: in progress**, branch `stage/1-golden-sets`.
+`/stage` step 4 (implement). The plan was approved on 2026-10-30.
+
+- Done: tests (seen failing for missing behaviour), `evals/` schema, metrics, stubs and
+  runner. All harness tests pass.
+- Waiting on **checkpoint A**: Nicolas writes the questions for the five golden sets.
+  Claude then fills PMIDs (Europe PMC lookups) and expected values, and Nicolas reviews
+  (checkpoint B). Until then the 11 golden-content tests fail on empty `evals/golden/*.jsonl`.
+- Food sources: USDA SR Legacy downloaded and cross-checked (`evals/golden/SOURCES.md`).
+  CIQUAL is still to fetch: `ciqual.anses.fr` answered 503, and the Wayback Machine
+  rate-limited the lookup.
+- After the content: `make check`, stage-reviewer, close.
 
 ## Decisions
 
