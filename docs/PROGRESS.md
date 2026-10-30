@@ -7,9 +7,7 @@ were decided the way they were.
 ## Now
 
 **Stage 0 — Foundations: in review (step 5 of the `/stage` skill).** Everything is implemented and
-`make check` is green. Open before closing: the Groq price per million tokens for
-`openai/gpt-oss-20b` and `openai/gpt-oss-120b` in `docs/architecture.md` (the reviewer's finding 2;
-the price comes from Nicolas's Groq console), then a second reviewer round, then close.
+`make check` is green. Open before closing: a second reviewer round, then close.
 
 ## Decisions
 

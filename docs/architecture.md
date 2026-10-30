@@ -9,13 +9,16 @@ All model calls go through `ModelGateway` (`src/nerdhealth/gateway.py`). The one
 **Provider:** Groq, free plan during development. **Candidates**, kept by config and compared
 on the golden sets from Stage 1; the cheapest that meets the §3.3 thresholds wins:
 
-| Model | Role | Price in / out per 1M tokens | Source |
-|---|---|---|---|
-| `openai/gpt-oss-20b` (default) | small, cheap candidate | **not yet recorded** | Groq console, to be filled on the day it is chosen |
-| `openai/gpt-oss-120b` | stronger candidate for synthesis and grounding | **not yet recorded** | same |
+| Model | Role | Input $/1M | Output $/1M | Context | Max completion | Source | Checked |
+|---|---|---|---|---|---|---|---|
+| `openai/gpt-oss-20b` (default) | small, cheap candidate | 0.075 | 0.30 | 131,072 | 65,536 | Groq console, Models page | 2026-10-30 |
+| `openai/gpt-oss-120b` | stronger candidate for synthesis and grounding | 0.15 | 0.60 | 131,072 | 65,536 | Groq console, Models page | 2026-10-30 |
 
-Until a price is set (`LLM_PRICE_IN_PER_MTOK` / `LLM_PRICE_OUT_PER_MTOK`), the gateway reports
-cost as missing (`None`), never as 0.
+Prices reach the gateway through `LLM_PRICE_IN_PER_MTOK` and `LLM_PRICE_OUT_PER_MTOK`, set
+alongside `LLM_MODEL` (default model: 0.075 and 0.30). The final model is chosen on the golden
+sets from Stage 1; this table is re-checked on the day it is chosen.
+
+Until a price is set, the gateway reports cost as missing (`None`), never as 0.
 
 **Free-plan limits** (check the account's exact values at console.groq.com/settings/limits):
 about 30 requests/min, 1,000 requests/day, 8K tokens/min, 200K tokens/day per model, and 8K
