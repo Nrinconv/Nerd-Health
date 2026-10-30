@@ -5,7 +5,12 @@ description = "Evidence search for training and nutrition."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "openai>=3.41.0",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-settings>=2.16.2",
+]
 
 [dependency-groups]
 dev = [
@@ -13,6 +18,7 @@ dev = [
     "pytest>=8.3",
     "pytest-cov>=5.0",
     "pyyaml>=6.0",
+    "respx>=0.23.1",
     "ruff>=0.6",
     "types-pyyaml>=6.0",
 ]
