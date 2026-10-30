@@ -306,8 +306,9 @@ means writing the questions the system already gets right.
 - `evals/run.py` running any mode against any callable and writing the per-category table.
 - `thresholds.yaml` initialised empty.
 
-**Tests:** schema validation on every golden file; the runner against a stub returns zeros
-and a well-formed report.
+**Tests:** schema validation on every golden file; the runner against each stub returns its
+expected floor (0 on answer metrics, 1.0 on the abstention metrics a refusal satisfies) and a
+well-formed report.
 **Done when:** `python -m evals.run --mode search` runs end to end against a stub.
 
 ---
