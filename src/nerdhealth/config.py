@@ -19,5 +19,5 @@ class Settings(BaseSettings):
     llm_price_in_per_mtok: float | None = None
     llm_price_out_per_mtok: float | None = None
 
-    qdrant_url: str = "http://localhost:6333"
-    database_url: str = "postgresql://nerdhealth:nerdhealth@localhost:5432/nerdhealth"
+    qdrant_url: str = "http://localhost:6343"
+    database_url: str = "postgresql://nerdhealth:nerdhealth@localhost:5442/nerdhealth"
