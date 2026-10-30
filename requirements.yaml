@@ -99,7 +99,7 @@ requirements:
     stage: 0
     verification: manual
     evidence: ""
-    text: docker compose up brings the stack up in < 3 min once data is loaded.
+    text: docker compose up brings the empty stack (Qdrant, Postgres) to healthy in < 3 min.
   - id: NF7
     stage: 2
     text: Ingestion is a script over a committed query list; the snapshot date is shown in the UI.
@@ -119,3 +119,8 @@ requirements:
     verification: manual
     evidence: ""
     text: No secrets in the repository; CI fails on a detected secret.
+  - id: NF12
+    stage: 2
+    verification: manual
+    evidence: ""
+    text: docker compose up brings the full stack up in < 3 min once the corpus is loaded.

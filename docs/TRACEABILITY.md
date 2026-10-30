@@ -8,7 +8,7 @@
 |---|---|---|---|
 | 0 | Foundations | in_progress | 0/3 |
 | 1 | Golden sets and eval harness | planned | 0/1 |
-| 2 | Corpus ingestion | planned | 0/3 |
+| 2 | Corpus ingestion | planned | 0/4 |
 | 3 | Study search | planned | 0/2 |
 | 4 | Question mode | planned | 0/5 |
 | 5 | Food mode | planned | 0/3 |
@@ -23,7 +23,7 @@
 | ID | Requirement | Verification | Status |
 |---|---|---|---|
 | NF5 | Backend coverage >= 70 %, enforced by the test command. | manual | no evidence |
-| NF6 | docker compose up brings the stack up in < 3 min once data is loaded. | manual | no evidence |
+| NF6 | docker compose up brings the empty stack (Qdrant, Postgres) to healthy in < 3 min. | manual | no evidence |
 | NF11 | No secrets in the repository; CI fails on a detected secret. | manual | no evidence |
 
 ## Stage 1 — Golden sets and eval harness
@@ -39,6 +39,7 @@
 | F1 | Ingest the Europe PMC corpus from a versioned query list, with full metadata; idempotent and reproducible. | 0/0 tests passing | no test |
 | F2 | Tag every paper with study type and population (sex, age band, training status, sample size); unknown allowed. | 0/0 tests passing | no test |
 | NF7 | Ingestion is a script over a committed query list; the snapshot date is shown in the UI. | 0/0 tests passing | no test |
+| NF12 | docker compose up brings the full stack up in < 3 min once the corpus is loaded. | manual | no evidence |
 
 ## Stage 3 — Study search
 
