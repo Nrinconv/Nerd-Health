@@ -19,7 +19,7 @@ lint:
 	uv run ruff format --check .
 
 types:
-	uv run mypy src scripts tests
+	uv run mypy src scripts tests evals
 
 # Everything, integration tests included (they fail, never skip, if services are down).
 test:

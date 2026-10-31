@@ -15,7 +15,7 @@
 
 stages:
   - {id: 0, name: Foundations, status: done}
-  - {id: 1, name: Golden sets and eval harness, status: planned}
+  - {id: 1, name: Golden sets and eval harness, status: done}
   - {id: 2, name: Corpus ingestion, status: planned}
   - {id: 3, name: Study search, status: planned}
   - {id: 4, name: Question mode, status: planned}

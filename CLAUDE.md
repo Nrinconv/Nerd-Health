@@ -85,6 +85,8 @@ make check-fast         # lint, types, unit tests only; not the gate
 make up / make down     # Qdrant (6343) and Postgres (5442) via docker compose
 make test               # pytest only (integration tests fail if services are down)
 uv run pytest -m req    # only requirement tests
+uv run python -m evals.run --mode <search|ask|food|oob|router> [--target module:callable]
+                        # golden set -> reports/eval/<mode>.{json,md}; exit 1 below threshold
 ```
 
 More commands arrive with each stage (`docker compose up` in Stage 0, `make eval` in

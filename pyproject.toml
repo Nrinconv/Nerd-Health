@@ -31,7 +31,7 @@ packages = ["src/nerdhealth"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src", "scripts"]
+pythonpath = ["src", "scripts", "."]
 addopts = "-ra --strict-markers --cov=nerdhealth --cov-fail-under=70"
 
 [tool.ruff]
@@ -45,4 +45,4 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
-mypy_path = ["src", "scripts"]
+mypy_path = ["src", "scripts", "."]

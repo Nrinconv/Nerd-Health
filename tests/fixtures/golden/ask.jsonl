@@ -1,0 +1,5 @@
+{"id": "a1", "category": "consensus", "question": "Does protein supplementation increase muscle gain with resistance training?", "expected_outcome": "ANSWERED", "expected_pmids": ["10000011"], "expected_answer": "Yes, a modest effect."}
+{"id": "a2", "category": "contested", "question": "Does cardio interfere with strength gains?", "expected_outcome": "ANSWERED", "expected_pmids": ["10000012", "10000013"], "expected_answer": "It depends on modality and volume."}
+{"id": "a3", "category": "population", "question": "Does creatine help women over 60 gain strength?", "expected_outcome": "ANSWERED", "expected_pmids": ["10000014"], "expected_answer": "Some evidence, mostly in men.", "population_mismatch": true}
+{"id": "a4", "category": "partial", "question": "Is plant protein as good as whey, and does it change sleep?", "expected_outcome": "PARTIAL", "expected_pmids": ["10000015"], "expected_answer": "Similar for hypertrophy; nothing found on sleep."}
+{"id": "a5", "category": "unanswerable", "question": "Does training on a full moon increase testosterone?", "expected_outcome": "INSUFFICIENT_EVIDENCE", "expected_pmids": []}

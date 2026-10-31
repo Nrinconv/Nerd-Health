@@ -7,7 +7,7 @@
 | # | Stage | Status | Verified |
 |---|---|---|---|
 | 0 | Foundations | done | 3/3 |
-| 1 | Golden sets and eval harness | planned | 0/1 |
+| 1 | Golden sets and eval harness | done | 1/1 |
 | 2 | Corpus ingestion | planned | 0/4 |
 | 3 | Study search | planned | 0/2 |
 | 4 | Question mode | planned | 0/5 |
@@ -30,7 +30,51 @@
 
 | ID | Requirement | Verification | Status |
 |---|---|---|---|
-| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 0/0 tests passing | no test |
+| F15 | Eval CLI: python -m evals.run --mode <mode> writes a per-category report. | 39/39 tests passing | verified |
+
+<details><summary>Tests</summary>
+
+- `F15` `tests/unit/test_eval_runner.py::test_a_crash_is_an_error_never_an_abstention` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_abstaining_never_earns_population_flag_credit` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_bad_cli_input_is_a_clean_usage_error[argv0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_bad_cli_input_is_a_clean_usage_error[argv1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_bad_cli_input_is_a_clean_usage_error[argv2]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_bad_cli_input_is_a_clean_usage_error[argv3]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_cli_search_runs_end_to_end_against_stub` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[0.8]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound3]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound4]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_fails_instead_of_passing[bound5]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_shape_is_reported[thresholds0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_shape_is_reported[thresholds1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_malformed_threshold_shape_is_reported[thresholds2]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_markdown_prints_not_computed_never_zero` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_missing_value_turned_into_zero_by_a_tool_still_fails` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_missing_value_written_as_zero_is_not_a_correct_not_in_data` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[ask]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[food]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[oob]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[router]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_perfect_oracle_scores_one[search]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[ask]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[food]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[oob]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[router]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_per_category_for_every_mode[search]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_report_records_the_golden_path_relative_to_the_repo` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_stub_scores_are_exact` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_breach_exits_nonzero` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_file_typo_at_the_top_fails[thresholds0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_file_typo_at_the_top_fails[thresholds1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_on_a_metric_not_computed_fails` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_on_an_unknown_category_fails` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_pointing_the_wrong_way_fails[over_abstention_rate-bound0]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_threshold_pointing_the_wrong_way_fails[recall_at_10-bound1]` — passed
+- `F15` `tests/unit/test_eval_runner.py::test_wrong_result_type_is_an_error` — passed
+
+</details>
 
 ## Stage 2 — Corpus ingestion
 
